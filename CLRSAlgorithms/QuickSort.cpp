@@ -61,7 +61,38 @@ void quicksortRecursive(std::vector<int> arr, int start, int end, bool usingRand
 	With randomized pivot selection, expected runtime is O(nlog(n))
 */
 void quicksort(std::vector<int> arr, int start, int end, bool usingRandomized) {
+	using namespace std;
+	// for now we will use a preallocated array as a stack, which should be faster than linked list due to locality
+	// we have maximum N-1 calls to partition since if we are unlucky, our partition may just reveal the largest element in the subarray each time
+	vector<pair<int,int>> stack = vector<pair<int, int>>(end-start);
+	int stackSize = 0;
+	stack[stackSize] = make_pair(start, end);
+	stackSize++;
 
+	while (stack.size()!=0) {
+		pair<int, int> indices = stack[stackSize-1];
+		int currStart = indices.first;
+		int currEnd = indices.second;
+		stackSize--;
+
+		if (currStart < currEnd) {
+			if (usingRandomized) {
+				// setting last element to random pivot
+				int randomIndex = (rand() % (currEnd - currStart)) + currStart;
+				int temp = arr[randomIndex];
+				arr[randomIndex] = arr[currEnd];
+				arr[currEnd] = temp;
+			}
+			int pivot = partition(arr, currStart, currEnd);
+			stack[stackSize + 1] = make_pair(pivot + 1, currEnd);
+			stackSize++;
+
+			stack[stackSize + 1] = make_pair(currStart, pivot - 1);
+			stackSize++;
+			// we will "recurse" on the left side of the array first
+		}
+
+	}
 }
 
 

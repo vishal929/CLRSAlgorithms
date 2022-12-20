@@ -130,6 +130,7 @@
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="MaximumSubarray.cpp" />
     <ClCompile Include="MergeSort.cpp" />
+    <ClCompile Include="QuickSort.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

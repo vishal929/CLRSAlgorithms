@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="NonComparisonSort.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="MaximumSubarray.cpp" />
     <ClCompile Include="MergeSort.cpp" />

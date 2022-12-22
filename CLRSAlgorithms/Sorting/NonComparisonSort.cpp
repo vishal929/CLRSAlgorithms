@@ -1,4 +1,5 @@
 #include <vector>
+#include "LinkedList.cpp"
 
 
 /*
@@ -113,8 +114,31 @@ std::vector<int> radixSortBinary(std::vector<int> arr, int d) {
 // bucket sort splits the input into buckets and then sorts within buckets
 // we use a linked list of buckets in order to accomplish this
 // the input array are values from [0,1), note that we can just divide any array by the largest value + 1 to achieve something similar 
-std::vector<int> bucketSort(std::vector<int> arr) {
-		
+// we sort in place
+// todo: implement generics
+void bucketSort(std::vector<int> arr) {
+	// initializing a bucket-list	
+	std::vector<LinkedList> buckets = new std::vector<LinkedList>(arr.size(), new LinkedList());
+
+	for (int i = 0; i < arr.size(); i++) {
+		buckets[(int)(arr[i] * arr.size())].insert(arr[i], 0);
+	}
+
+	// sorting each bucket
+	for (int i = 0; i < buckets.size(); i++) {
+		buckets[i].insertionSort();
+	}
+
+	// returning the buckets concatenated
+	int insertionIndex = 0;
+	for (int i = 0; i < buckets.size(); i++) {
+		LinkedListNode* runner = buckets[i];
+		while (runner != nullptr) {
+			arr[insertionIndex] = runner->item;
+			runner = runner->next;
+			insertionIndex++;
+		}
+	}
 }
 
 

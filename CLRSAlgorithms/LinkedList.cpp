@@ -71,7 +71,7 @@ public:
 		return this->size;
 	}
 	
-	// inserting an element at a given index of the linked list
+	// inserting an element at a given index of the linked list (0 index is the head)
 	// if there is an element already at this index, we push it over, so that it becomes the next for the inserted node
 	void insert(int element, int index) {
 		if (index > size) {
@@ -102,7 +102,7 @@ public:
 		
 	}
 
-	// removing an element at a given index
+	// removing an element at a given index (0 index is the head)
 	// then the nodes to the right of it shift to the left to compensate
 	void erase(int index) {
 		if (index > size) {
@@ -120,13 +120,111 @@ public:
 		}
 		if (prev == nullptr) {
 			// we are removing the head
-			if (head != nullptr) head = head->next;
-			size--;
+			if (head != nullptr) {
+				head = head->next;
+				size--;
+			}
 		}
 		else {
 			prev->next = runner->next;
 			size--;
 		}
+	}
+	
+	//todo: finish swap
+	// swapping two nodes in a linked list
+	void swap(int indexOne, int indexTwo) {
+		if (indexOne > size || indexTwo > size) {
+			// invalid operation
+			throw "Indices for the swap cannot be greater than the size of the array";
+		}
+		else if (indexOne == indexTwo) {
+			// swapping an element with itself
+			return;
+		}
+		LinkedListNode* onePrev = nullptr;
+		LinkedListNode* oneRunner = head;
+		int oneIndex = 0;
+		while (oneIndex != indexOne) {
+			onePrev = oneRunner;
+			oneRunner = oneRunner->next;
+			oneIndex++;
+		}
+
+		LinkedListNode* twoPrev = nullptr;
+		LinkedListNode* twoRunner = head;
+		int twoIndex = 0;
+		while (twoIndex != indexTwo) {
+			twoPrev = twoRunner;
+			twoRunner = twoRunner->next;
+			twoIndex++;
+		}
+
+		// swapping
+		if (onePrev == nullptr) {
+			//swapping head
+			twoPrev->next = twoRunner->next;
+			twoRunner->next = head->next;
+			twoPrev->next = head;
+
+			head = twoRunner;
+		}
+		else if (twoPrev == nullptr) {
+			// swapping head in other orientation
+			onePrev->next = oneRunner->next;
+			oneRunner->next = head->next;
+			onePrev->next = head;
+
+			head = oneRunner;
+		}
+		else {
+			// disconnecting nodes to swap
+			twoPrev->next = twoRunner->next;
+			onePrev->next = oneRunner->next;
+
+			// setting new next pointers for nodes to swap
+			oneRunner->next = twoPrev->next;
+			twoRunner->next = onePrev->next;
+
+			// adjusting final connections 
+			onePrev->next = twoRunner;
+			twoPrev->next = oneRunner;
+		}
+
+	}
+
+	// performing insertion sort on a linked list
+	// we basically create a new list but using the same space (this maintains the invariant: at each iteration the subarray is sorted)
+	void insertionSort() {
+		LinkedListNode* sorted = nullptr;
+		
+		LinkedListNode* runner = head;
+
+		while (runner != nullptr) {
+			LinkedListNode* toInsert = runner;
+			// finding the best place to insert this node into the sorted linked list
+			LinkedListNode* sortedPrev = nullptr;
+			LinkedListNode* sortedRunner = sorted;
+			while (sortedRunner != nullptr && sortedRunner->item < toInsert->item) {
+				sortedPrev = sortedRunner;
+				sortedRunner = sortedRunner->next;
+			}
+			// insertion
+			if (sortedPrev == nullptr) {
+				// node becomes head of the sorted linked list
+				toInsert->next = sortedRunner;
+				sorted = toInsert;
+			}
+			else {
+				// we found the best place to insert the node in sorted order
+				sortedPrev->next = toInsert;
+				toInsert->next = sortedRunner;
+			}
+			runner = runner->next;
+		}
+
+		// setting the head to the head of the sorted list
+		head = sorted;
 	}
 
 };

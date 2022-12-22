@@ -1,4 +1,5 @@
 #include <vector>
+#include <unordered_map>
 #include "LinkedList.cpp"
 
 
@@ -56,6 +57,37 @@ std::vector<int> countingSortRadixHelper(std::vector<int> arr, int k, int digit)
 
 	return result;
 	
+}
+
+// implementation of counting sort using a hash map (gets around the negative value conundrum)
+// we also sort in place here (using an unordered map, we do not have a stable sort!)
+// takes O(k+n) time because we iterate through k elements but we insert at most n 
+void countingSortHashMap(std::vector<int> arr) {
+	using namespace std;
+	unordered_map<int, int> map = new unordered_map<int, int>();
+	// we need to keep track of the smallest and largest element
+	int smallest = INT32_MAX;
+	int largest = INT32_MIN;
+	for (int i = 0; i < arr.size(); i++) {
+		if (map.find(arr[i]) != map.end()) {
+			map[arr[i]] ++;
+		}
+		else {
+			map.insert(make_pair(arr[i], 1));
+		}
+		if (arr[i] < smallest) smallest = arr[i];
+		if (arr[i] > largest) largest = arr[i];
+	}
+	
+	int insertionPosition = 0;
+	for (int i = smallest; i <= largest; i++) {
+		if (map.find(i) != map.end()) {
+			for (int j = 0; j < map[i]; j++) {
+				arr[insertionPosition] = i;
+				insertionPosition++;
+			}
+		}
+	}
 }
 
 std::vector<int> countingSortRadixBinaryHelper(std::vector<int> arr, int digit) {

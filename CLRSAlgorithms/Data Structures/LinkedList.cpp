@@ -3,40 +3,41 @@
 /*
 	Implementation of a linked list, doubly connected linked list, circular linked list, and circular doubly connected linked list
 */
-
+template <typename I>
 class LinkedListNode {
 	public:
 		// element to hold	
-		int item;
+		I item;
 		// reference to next element
 		LinkedListNode* next;
 
 
-		explicit LinkedListNode(int item) {
+		explicit LinkedListNode(I item) {
 			this->item = item;
 			this->next = nullptr;
 		}
 
-		explicit LinkedListNode(int item, LinkedListNode* next) {
+		explicit LinkedListNode(I item, LinkedListNode* next) {
 			this->item = item;
 			this->next = next;
 		}
 };
 
+template <typename I>
 class DoublyLinkedListNode: public LinkedListNode {
 	public:
 		// in addition to the linked list node, this holds a reference to a previous node
 		LinkedListNode* prev;
 
-		explicit DoublyLinkedListNode(int item):LinkedListNode(item) {
+		explicit DoublyLinkedListNode(I item):LinkedListNode(item) {
 			this->prev = nullptr;
 		}
 
-		explicit DoublyLinkedListNode(int item, LinkedListNode* next) : LinkedListNode(item, next) {
+		explicit DoublyLinkedListNode(I item, LinkedListNode* next) : LinkedListNode(item, next) {
 			this->prev = nullptr;
 		}
 		
-		explicit DoublyLinkedListNode(int item, LinkedListNode* next, LinkedListNode* prev) : LinkedListNode(item, next) {
+		explicit DoublyLinkedListNode(I item, LinkedListNode* next, LinkedListNode* prev) : LinkedListNode(item, next) {
 			this->prev = prev;
 		}	
 };
@@ -49,6 +50,7 @@ class DoublyLinkedListNode: public LinkedListNode {
 	size()
 */
 
+template <typename I>
 class LinkedList {
 private:
 	// reference to the head of the list
@@ -62,7 +64,7 @@ public:
 		this->size = 0;
 	}
 
-	LinkedList(LinkedListNode* head) {
+	LinkedList(LinkedListNode<I>* head) {
 		this->head = head;
 		this->size = 1;
 	}
@@ -73,14 +75,14 @@ public:
 	
 	// inserting an element at a given index of the linked list (0 index is the head)
 	// if there is an element already at this index, we push it over, so that it becomes the next for the inserted node
-	void insert(int element, int index) {
+	void insert(I element, int index) {
 		if (index > size) {
 			// invalid operation
 			throw "Invalid index provided: index cannot be greater than the current size of the linked list!";
 		}
 		
-		LinkedListNode* prev = nullptr;
-		LinkedListNode* runner = head;
+		LinkedListNode<I>* prev = nullptr;
+		LinkedListNode<I>* runner = head;
 		// finding the index
 		int currIndex = 0;
 		while (currIndex != index) {
@@ -91,11 +93,11 @@ public:
 		//insertion
 		if (prev == nullptr) {
 			// inserted node becomes the head
-			head = new LinkedListNode(element);
+			head = new LinkedListNode<I>(element);
 			head->next = runner;
 		}
 		else {
-			prev->next = new LinkedListNode(element);
+			prev->next = new LinkedListNode<I>(element);
 			prev->next->next = runner;
 		}
 		size++;
@@ -110,8 +112,8 @@ public:
 			throw "Invalid index provided: index cannot be greater than the current size of the linked list!";
 		}
 
-		LinkedListNode* prev = nullptr;
-		LinkedListNode* runner = head;
+		LinkedListNode<I>* prev = nullptr;
+		LinkedListNode<I>* runner = head;
 		int currIndex = 0;
 		while (currIndex != index) {
 			prev = runner;
@@ -142,8 +144,8 @@ public:
 			// swapping an element with itself
 			return;
 		}
-		LinkedListNode* onePrev = nullptr;
-		LinkedListNode* oneRunner = head;
+		LinkedListNode<I>* onePrev = nullptr;
+		LinkedListNode<I>* oneRunner = head;
 		int oneIndex = 0;
 		while (oneIndex != indexOne) {
 			onePrev = oneRunner;
@@ -151,8 +153,8 @@ public:
 			oneIndex++;
 		}
 
-		LinkedListNode* twoPrev = nullptr;
-		LinkedListNode* twoRunner = head;
+		LinkedListNode<I>* twoPrev = nullptr;
+		LinkedListNode<I>* twoRunner = head;
 		int twoIndex = 0;
 		while (twoIndex != indexTwo) {
 			twoPrev = twoRunner;
@@ -196,15 +198,15 @@ public:
 	// performing insertion sort on a linked list
 	// we basically create a new list but using the same space (this maintains the invariant: at each iteration the subarray is sorted)
 	void insertionSort() {
-		LinkedListNode* sorted = nullptr;
+		LinkedListNode<I>* sorted = nullptr;
 		
-		LinkedListNode* runner = head;
+		LinkedListNode<I>* runner = head;
 
 		while (runner != nullptr) {
-			LinkedListNode* toInsert = runner;
+			LinkedListNode<I>* toInsert = runner;
 			// finding the best place to insert this node into the sorted linked list
-			LinkedListNode* sortedPrev = nullptr;
-			LinkedListNode* sortedRunner = sorted;
+			LinkedListNode<I>* sortedPrev = nullptr;
+			LinkedListNode<I>* sortedRunner = sorted;
 			while (sortedRunner != nullptr && sortedRunner->item < toInsert->item) {
 				sortedPrev = sortedRunner;
 				sortedRunner = sortedRunner->next;
@@ -229,14 +231,17 @@ public:
 
 };
 
+template <typename I>
 class DoublyLinkedList {
 	
 };
 
+template <typename I>
 class CircularLinkedList {
 
 };
 
+template<typename I>
 class CircularDoublyLinkedList {
 
 };

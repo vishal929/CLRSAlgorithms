@@ -123,14 +123,40 @@ public:
 		if (prev == nullptr) {
 			// we are removing the head
 			if (head != nullptr) {
+				LinkedListNode<I>* toDelete = head;
 				head = head->next;
+				delete(toDelete);
 				size--;
 			}
 		}
 		else {
 			prev->next = runner->next;
+			delete(runner);
 			size--;
 		}
+	}
+
+	void eraseByEntry(I value) {
+		LinkedListNode<I>* prev = nullptr;
+		LinkedListNode<I>* runner = head;
+
+		while (runner != nullptr) {
+			if (runner->item == value) {
+				// then we found the element to delete
+				if (prev == nullptr) {
+					head = runner->next;
+					delete(runner);
+				}
+				else {
+					prev->next = runner->next;
+					delete(runner);
+				}
+			}
+			prev = runner;
+			runner = runner->next;
+		}
+
+		throw "Entry Not Found Exception";
 	}
 	
 	//todo: finish swap

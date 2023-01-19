@@ -8,6 +8,12 @@ class TreeNode {
 	TreeNode<T>* left;
 	TreeNode<T>* right;
 	TreeNode<T>* parent;
+
+public:
+	TreeNode(T item) {
+		this->item = item;
+		left, right, parent = nullptr;
+	}
 };
 
 

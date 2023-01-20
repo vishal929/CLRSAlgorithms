@@ -68,20 +68,20 @@ public:
 		
 		while (runner != nullptr) {
 			if (runner->item < element) {
-				if (runner->left == nullptr) {
-					// we found the place to insert
-					runner->left = toInsert;
-					return;
-				}
-				runner = runner->left;
-			}
-			else {
 				if (runner->right == nullptr) {
-					// we found the insertion point
-					runner->right = toInsert;
+					// we found the place to insert
+					runner->right= toInsert;
 					return;
 				}
 				runner = runner->right;
+			}
+			else {
+				if (runner->left== nullptr) {
+					// we found the insertion point
+					runner->left= toInsert;
+					return;
+				}
+				runner = runner->left;
 			}
 		}
 

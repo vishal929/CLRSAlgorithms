@@ -252,14 +252,14 @@ public:
 				}
 				else {
 					// uncle is black
-					if (node == node->parent->right) {
+					if (node == node->parent->left) {
 						// this node is its parents right child
 						node = node->parent;
-						leftRotate(node);
+						rightRotate(node);
 					}
 					node->parent->color = true;
 					node->parent->parent->color = false;
-					rightRotate(node->parent->parent);
+					leftRotate(node->parent->parent);
 				}
 			}
 		}

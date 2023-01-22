@@ -166,8 +166,8 @@ public:
 				}
 				else {
 					if (sibling->right == nullptr || sibling->right->color) {
-						sibling->left->color = false;
-						sibling->color = true;
+						sibling->left->color = true;
+						sibling->color = false;
 						rightRotate(sibling);
 						sibling = node->parent->right;
 					}
@@ -186,7 +186,7 @@ public:
 					sibling->color = true;
 					node->parent->color = false;
 					leftRotate(node->parent);
-					sibling = node->parent->right;
+					sibling = node->parent->left;
 				}
 				
 				if ((sibling->left == nullptr || sibling->left->color) && (sibling->right == nullptr && sibling->right->color)) {
@@ -194,16 +194,16 @@ public:
 					node = node->parent;
 				}
 				else {
-					if (sibling->right == nullptr || sibling->right->color) {
-						sibling->left->color = false;
-						sibling->color = true;
-						rightRotate(sibling);
-						sibling = node->parent->right;
+					if (sibling->left == nullptr || sibling->left->color) {
+						sibling->right->color = true;
+						sibling->color = false;
+						leftRotate(sibling);
+						sibling = node->parent->left;
 					}
 					sibling->color = node->parent->color;
 					node->parent->color = true;
-					if (sibling->right != nullptr) sibling->right->color = true;
-					leftRotate(node->parent);
+					if (sibling->left != nullptr) sibling->left->color = true;
+					rightRotate(node->parent);
 					node = root;
 				}
 			}

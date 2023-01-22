@@ -82,7 +82,7 @@ public:
 		redBlackInsertFixUp(toInsert);
 	}
 
-	// helper method for deletion
+	// helper method for deletion for swapping positions of nodes
 	void redBlackTransplant(RedBlackTreeNode<T>* u, RedBlackTreeNode<T>* v) {
 		if (u->parent == nullptr) {
 			root = v;
@@ -145,6 +145,17 @@ public:
 
 	/*
 		Method that restores red black properties if needed after a deletion
+		We have 8 cases, where 4 cases are for fixing on one side of the tree, and the other 4 are symmetric for the other side
+		The below 4 cases are for fixing along a node who is the left child of its parent
+		1) The nodes sibling is red
+		2) The nodes sibling is black and both of the siblings children are black
+		3) The nodes sibling is black and its left child is red and right child is black
+		4) The nodes sibling is black and its right child is red
+		The below 4 cases are for fixing along a node who is the right child of its parent
+		5) the nodes sibling is red
+		6) the nodes sibling is black and both of the siblings children are black
+		7) the nodes sibling is black and its left child is black and right child is red
+		8) the nodes sibling is black and its left child is red
 	*/
 	void redBlackDeleteFixUp(RedBlackTreeNode<T>* node) {
 		// note that the sibling of this node cannot be nullptr due to red black tree properties
@@ -153,6 +164,7 @@ public:
 				// node is the left child of its parent
 				RedBlackTreeNode<T>* sibling = node->parent->right;
 				if (!sibling->color) {
+					// transforming case 1 to some other case of 2,3,4
 					// sibling is red
 					sibling->color = true;
 					node->parent->color = false;
@@ -161,16 +173,19 @@ public:
 				}
 				
 				if ((sibling->left == nullptr || sibling->left->color) && (sibling->right == nullptr && sibling->right->color)) {
+					// case 2 
 					sibling->color = false;
 					node = node->parent;
 				}
 				else {
 					if (sibling->right == nullptr || sibling->right->color) {
+						// case 3 to case 4 transformation
 						sibling->left->color = true;
 						sibling->color = false;
 						rightRotate(sibling);
 						sibling = node->parent->right;
 					}
+					// handling case 4
 					sibling->color = node->parent->color;
 					node->parent->color = true;
 					if (sibling->right != nullptr) sibling->right->color = true;
@@ -183,6 +198,8 @@ public:
 				RedBlackTreeNode<T>* sibling = node->parent->left;
 				if (!sibling->color) {
 					// sibling is red
+
+					// transforming case 5 to any of case 6,7,8
 					sibling->color = true;
 					node->parent->color = false;
 					leftRotate(node->parent);
@@ -190,16 +207,20 @@ public:
 				}
 				
 				if ((sibling->left == nullptr || sibling->left->color) && (sibling->right == nullptr && sibling->right->color)) {
+					// handling case 6
 					sibling->color = false;
 					node = node->parent;
 				}
 				else {
 					if (sibling->left == nullptr || sibling->left->color) {
+						// transforming case 7 to case 8
 						sibling->right->color = true;
 						sibling->color = false;
 						leftRotate(sibling);
 						sibling = node->parent->left;
 					}
+
+					// handling case 8
 					sibling->color = node->parent->color;
 					node->parent->color = true;
 					if (sibling->left != nullptr) sibling->left->color = true;
@@ -215,6 +236,15 @@ public:
 
 	/*
 		Method that restores red black properties if needed after an insert
+		// we have 6 cases of which 3 are for fixing along one side of the tree and 3 are symmetric for the other side
+		// the below 3 cases are when the nodes parent is the node's grandparents left child
+		1) the node's uncle is red
+		2) The node's uncle is black and the node is a right child of its parent
+		3) The node's uncle is black and the node is a left child of its parent
+		// the below 3 cases are when the nodes parent is the node's grandparent's right child
+		4) The node's uncle is red
+		5) The node's uncle is black and the node is a left child of its parent
+		6) the node's uncle is black and the node is a right child of its parent
 	*/
 	void redBlackInsertFixUp(RedBlackTreeNode<T>* node) {
 		// the root is black (True) so we are guaranteed to terminate
@@ -223,6 +253,7 @@ public:
 			if (node->parent == node->parent->parent->left) {
 				RedBlackTreeNode<T>* uncle = node->parent->parent->right;
 				if (!uncle->color) {
+					// case 1
 					//uncle is red
 					node->parent->color = true;
 					uncle->color = true;
@@ -232,10 +263,12 @@ public:
 				else {
 					// uncle is black
 					if (node == node->parent->right) {
+						// transforming case 2 to case 3
 						// this node is its parents right child
 						node = node->parent;
 						leftRotate(node);
 					}
+					// handling case 3
 					node->parent->color = true;
 					node->parent->parent->color = false;
 					rightRotate(node->parent->parent);
@@ -244,6 +277,7 @@ public:
 			else {
 				RedBlackTreeNode<T>* uncle = node->parent->parent->left;
 				if (!uncle->color) {
+					// case 4
 					//uncle is red
 					node->parent->color = true;
 					uncle->color = true;
@@ -253,10 +287,12 @@ public:
 				else {
 					// uncle is black
 					if (node == node->parent->left) {
+						// transforming case 5 to case 6
 						// this node is its parents right child
 						node = node->parent;
 						rightRotate(node);
 					}
+					// handling case 6
 					node->parent->color = true;
 					node->parent->parent->color = false;
 					leftRotate(node->parent->parent);

@@ -366,4 +366,76 @@ public:
 		leftChild->parent = par;
 		node->parent = leftChild;		
 	}
+	
+	/*
+		Function that calculates the black height of a node: the number of black nodes on any simple path from this node to a leaf 
+		This function is defined recursively
+	*/
+	static int blackHeight(RedBlackTreeNode<T>* node) {
+		if (node == nullptr) {
+			// leaves are null, so this is a black node
+			return 1;
+		}
+		else {
+			int inclusive = 0;
+			// need to include this node in the count if it is black
+			if (node->color) inclusive++;
+
+			// by property 5 mentioned in the comment of the assertValid function, 
+			// the blackheight of the left subtree equals the blackheight of the right subtree, so we do not need to check both
+			return inclusive + blackHeight(node->left);
+		}
+	}
+
+	/*
+		Helper function that returns true if property 5 detailed in comments of the assertValid function is satisfied and false otherwise
+		So, we find a single path to a leaf first, and then check if every other path has the same number of black nodes
+		We can run dfs in O(n) time to get bhOnASinglePath and then verify with this method
+	*/
+	bool blackHeightChecker(BlackTreeNode<T>* node, int bhOnASinglePath, int bhSoFar) {
+		if (node == nullptr) {
+			if (bhSoFar + 1 == bhOnASinglePath) {
+				return true;
+			}
+			return false;
+		}
+		
+		// need to increment bhSoFar if this node is black
+		if (node->color) bhSoFar++;
+		return blackHeightChecker(node->left, bhOnASinglePath, bhSoFar) && blackHeightChecker(node->right, bhOnASinglePath, bhSoFar);
+	}
+	
+	/*
+		Function that returns true if this tree satisfies every rule of red black trees
+		The function returns false if any rule is not satisfied
+		The 5 rules are given below:
+		1) Every node is either red or black
+		2) The root is black
+		3) Every leaf (null child) is black
+		4) If a node is red, then its children are black
+		5) For each node, every simple path from the node to a descendent leaf contains the same number of black nodes
+	*/
+	bool assertValid(RedBlackTreeNode<T>* node) {
+		if (node == nullptr) return true;
+
+		if (node == root && !node->color) {
+			// the root is not black, violation of rule 2
+			return false;
+		}
+
+		if (!node->color && ((node->left != nullptr && !node->left->color) || (node->right != nullptr && !node->right->color))) {
+			// then this node is red, but one of its children is not black
+			// violation of rule 4
+			return false;
+		}
+		
+		int bh = blackHeight(node);
+		if (!blackHeightChecker(node,bh,0) {
+			// violation of rule 5
+			return false;
+		}
+		
+		bool leftCheck = assertValid(node->left);
+		bool rightCheck = assertValid(node->right);
+	}
 }

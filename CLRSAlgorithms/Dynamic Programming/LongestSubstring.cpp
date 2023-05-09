@@ -17,7 +17,8 @@ int lengthOfLongestSubstring(string s) {
     for (int i = 0; i < s.size(); i++) {
         if (seen[s[i]] != -1) {
             // we have seen this before
-            for (; left < i; left++) {
+            int pos = seen[s[i]];
+            for (; left < pos; left++) {
                 seen[s[left]] = -1;
                 curr--;
             }

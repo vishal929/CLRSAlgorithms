@@ -14,6 +14,107 @@ public:
 		this->item = item;
 		left, right, parent = nullptr;
 	}
+
+	// inorder traversal visits the left subtree, the root, and then the right subtree
+	static void inorderTraversal(TreeNode<T>* root) {
+		// stack instead of recursion
+		forward_list stack;
+		if (root != nullptr) stack.push_front(root);
+
+		while (stack.size() > 0) {
+
+		}
+		if (root != nullptr) {
+			inorderTraversal(root->left);
+			cout << root->item;
+			inorderTraversal(root->right);
+		}
+	}
+
+	// postorder traversal visits the left subtree, the right subtree, and then the root
+	static void postorderTraversalIterative(TreeNode<T>* root) {
+		// using stack instead of recursion
+		stack<TreeNode<T>*> s1;
+		stack<TreeNode<T>*> s2;
+		if (root != nullptr) s1.push(root);
+		while (s1.size() > 0) {
+			TreeNode<T>* node = s1.top();
+			s1.pop();
+			if (node->left != nullptr) s1.push(node->left);
+			if (node->right != nullptr) s1.push(node->right);
+			s2.push(node);
+		}
+
+		while (s2.size() > 0) {
+			TreeNode<T>* node = s2.top();
+			s2.pop();
+			//TODO: implement generic function for visiting a node instead of printing
+
+		}
+
+	}
+
+	static void postorderTraversal(TreeNode<T>* root) {
+		if (root != nullptr) {
+			postorderTraversal(root->left);
+			postorderTraversal(root->right);
+			// TODO: implement generic function for visiting a node instead of printing
+			cout << root->item;
+		}
+	}
+	
+	// preorder traversal visits the root, then the left subtree, then the right subtree
+	static void preorderTraversalIterative(TreeNode<T>* root) {
+		// using stack instead of recursion
+		forward_list<TreeNode<T>*> stack;
+		if (root != nullptr) stack.push_front(root);
+		while (stack.size() > 0) {
+			TreeNode<T>* node = stack.front();
+			stack.pop_front();
+
+			// TODO: do node specific logic using generic function
+
+			// pushing the right subtree then left subtree due to fifo
+			if (node->right != nullptr) stack.push_front(node->right);
+			if (node->left != nullptr) stack.push_front(node->left);
+		}
+		
+	}
+
+	static void preorderTraversal(TreeNode<T>* root) {
+		if (root != nullptr) {
+			// TODO: do node specific logic using generic function instead of print
+			cout << root->item;
+			inorderTraversal(root->left);
+			inorderTraversal(root->right);
+		}
+	}
+	
+	// level traversal visits each depth separately (if space is a huuuge concern, we can visit nodes like in dfs and map output by depth)
+	static void levelTraversal(TreeNode<T>* root) {
+		vector<vector<TreeNode*>> levels;
+		if (root != nullptr) {
+			levels.push_back(vector<TreeNode*> first{ root });
+		}
+		
+		// we only keep the last level and the new level to build in memory
+		while (levels.size() > 0) {
+			vector<TreeNode*> curr_level = levels.back();
+			levels.pop_back();
+			vector<TreeNode*> new_level;
+			for (int i = 0; i < curr_level.size(); i++) {
+				TreeNode* node = curr_level[i];
+
+				// do node specific logic
+				// TODO: add generic function here for node specific logic				
+
+				// add children to the new level
+				if (node->left != nullptr) new_level.push_back(node->left);
+				if (node->right != nullptr) new_level.push_back(node->right);
+			}
+			if (new_level.size() > 0) levels.push_back(new_level);
+		}
+	}
 };
 
 
@@ -223,31 +324,6 @@ public:
 		return nullptr;
 	}
 	
-	// inorder traversal visits the left subtree, the root, and then the right subtree
-	static void inorderTraversal(TreeNode<T>* root) {
-		if (root != nullptr) {
-			inorderTraversal(root->left);
-			cout << root->item;
-			inorderTraversal(root->right);
-		}
-	}
 
-	// postorder traversal visits the left subtree, the right subtree, and then the root
-	static void postorderTraversal(TreeNode<T>* root) {
-		if (root != nullptr) {
-			inorderTraversal(root->left);
-			inorderTraversal(root->right);
-			cout << root->item;
-		}
-	}
-	
-	// preorder traversal visits the root, then the left subtree, then the right subtree
-	static void preorderTraversal(TreeNode<T>* root) {
-		if (root != nullptr) {
-			cout << root->item;
-			inorderTraversal(root->left);
-			inorderTraversal(root->right);
-		}
-	}
 };
 

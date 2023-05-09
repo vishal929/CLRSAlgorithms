@@ -10,20 +10,34 @@
 	Insertion sort is worst case O(n^2) time and uses the idea that we maintain a subarray that is sorted
 	arr is the input array of integers to sort
 */
-void insertionSort(std::vector<int> arr){
-	using namespace std;
-
-	for (int i = 1; i < arr.size(); i++) {
-		int j = 0;
-		for (j = i - 1; j >= 0; j--) {
-			if (arr[i] >= arr[j]) {
-				// then we found the right position for i (namely j+1)
+template<class RandomAccessIterator>
+void insertionSort(RandomAccessIterator first, RandomAccessIterator last){
+	for (RandomAccessIterator i = first+1; i != last; i++) {
+		RandomAccessIterator j = i-1;
+		for (RandomAccessIterator j = i - 1; j >= first; j--) {
+			if (*i >= *j) {
+				// this is the right position for i
 				break;
 			}
 		}
-		
-		int tmp = arr[j + 1];
-		arr[j + 1] = arr[i];
-		arr[i] = tmp;
+		int tmp = *(j + 1);
+		*(j + 1) = *i;
+		*i = tmp;
+	}
+}
+
+template<class RandomAccessIterator, class Compare>
+void insertionSort(RandomAccessIterator first, RandomAccessIterator last, Compare cmp){
+	for (RandomAccessIterator i = first+1; i != last; i++) {
+		RandomAccessIterator j = i-1;
+		for (RandomAccessIterator j = i - 1; j >= first; j--) {
+			if (cmp(*i, *j)) {
+				// this is the right position for i
+				break;
+			}
+		}
+		int tmp = *(j + 1);
+		*(j + 1) = *i;
+		*i = tmp;
 	}
 }

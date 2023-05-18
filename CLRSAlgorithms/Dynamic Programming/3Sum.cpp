@@ -1,9 +1,11 @@
 #include <vector>
+#include <algorithm>
 
 /*
     given a vector of integers, return tuples (nums[i],nums[j],nums[k]) where i \neq j \neq k such that the tuple sums to 0
 */
-vector<vector<int>> threeSum(vector<int>& nums) {
+std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
+    using namespace std;
     vector<vector<int>> solutions;
     // sorting nums
     sort(nums.begin(), nums.end());

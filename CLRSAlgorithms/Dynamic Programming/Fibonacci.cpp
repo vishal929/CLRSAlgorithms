@@ -2,6 +2,7 @@
 
 /*
 	using dynamic programming to compute the n-th fibonnaci number with O(1) space in O(n) time
+	I am using the convention that fib(0)=0, fib(1)=1, and fib(i) = fib(i-2)+fib(i-1) for i>=2
 	n is a nonnegative integer
 */
 int fibonacci(int n) {

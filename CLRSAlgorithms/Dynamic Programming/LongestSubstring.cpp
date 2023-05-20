@@ -1,12 +1,14 @@
 #include <string>
 #include <set>
+#include <vector>
 
 /*
     We find the length of the longest substring of s without repeating characters
     (substring is a contiguous portion of a string, NOT a subsequence)
     s: input string
 */
-int lengthOfLongestSubstring(string s) {
+int lengthOfLongestSubstring(std::string s) {
+    using namespace std;
     // O(n) solution using two pointers
     int best = 0;
     int left = 0;

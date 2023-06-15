@@ -20,7 +20,6 @@ std::pair<std::vector<std::vector<int>>,int> matrixChainMultiplication(std::vect
    // (n+1 x n+1 matrix)
    vector<vector<int>> M(matrixDims.size(),vector<int>(matrixDims.size(),0)); 
    vector<vector<int>> S(matrixDims.size(),vector<int>(matrixDims.size(),0));
-   int diagonal = 1;
    for (int j=1;j<matrixDims.size();j++){
     for (int i=0;i<matrixDims.size();i++){
        M[i][i+j] = INT_MAX; 

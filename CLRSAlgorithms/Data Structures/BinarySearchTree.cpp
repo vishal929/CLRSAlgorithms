@@ -4,12 +4,12 @@
 */
 template <typename T>
 class TreeNode {
+public:
 	T item;
 	TreeNode<T>* left;
 	TreeNode<T>* right;
 	TreeNode<T>* parent;
 
-public:
 	TreeNode(T item) {
 		this->item = item;
 		left, right, parent = nullptr;
@@ -121,13 +121,13 @@ public:
 template <typename T>
 class BinarySearchTree {
 
+public:
 	// root of tree
 	TreeNode<T>* root;
 
 	// number of elements in the binary search tree
 	int size;
 
-public:
 	BinarySearchTree() {
 		root = nullptr;
 		size = 0;

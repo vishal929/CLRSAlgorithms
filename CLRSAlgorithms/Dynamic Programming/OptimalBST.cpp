@@ -11,8 +11,9 @@
 		(i.e dummyProbs[0] is the probability of searching for key less than keys[0] 
 		and dummyProbs[i] 0<i<n is prob of searching for key greater than keys[i-1] but less than keys[i]
 		and dummyProbs[n] is the probability of searching for key greater than keys[n-1])
+	We return the cost of the binary tree and the split matrix (which can be used to construct the BST)
 */
-BinarySearchTree<int>* constructOptimalBST(std::vector<int> keys,  std::vector<float> probs,
+std::pair<float,std::vector<std::vector<int>>> constructOptimalBST(std::vector<int> keys,  std::vector<float> probs,
 	std::vector<float> dummyProbs) {
 	using namespace std;
 	// this is similar to the optimal matrix chain multiplication problem
@@ -58,18 +59,58 @@ BinarySearchTree<int>* constructOptimalBST(std::vector<int> keys,  std::vector<f
 		}
 	}
 
-	// building the binary tree from the saved roots	
-	BinarySearchTree<int>* tree = new BinarySearchTree<int>();
+	return make_pair(M[1][keys.size()], root);
+}
 
-	stack<int> dfs;
-	if (root[1][keys.size()] != -1) {
-		dfs.push(root[1][keys.size()]);
+/*
+	Building a binary search tree from the saved roots of the optimal BST algorithm
+	keys is the vector of keys to be inserted into the binary search tree for searching
+	roots are the splits for the optimal binary search tree obtained from the constructOptimalBST routine
+	We return a Binary Search Tree Object with the keys inserted
+*/
+BinarySearchTree<int>* buildTree(std::vector<int> keys, std::vector<std::vector<int>> roots) {
+	using namespace std;
+	BinarySearchTree<int>* bst = new BinarySearchTree<int>();
+	// we can use a stack to build the tree
+	stack<pair<int,int>> s;
+	// need to keep track of treenode objects to add to and on which subtree (left = false, right=true)
+	stack<pair<TreeNode<int>*,bool>> nodeS;
+	if (keys.size() > 0) {
+		// only do this if we have things to put in the tree
+		// push the first split to the stack
+		s.push(make_pair(1, keys.size()));
+		nodeS.push(make_pair(nullptr,false));
 	}
 
-	while (dfs.size() > 0) {
-		// we check if this result is from i-1 value or 
-		//TODO: reconstruction
+	while (s.size() > 0) {
+		int low = s.top().first;
+		int high = s.top().second;
+		int splitIdx = roots[low][high];
+		s.pop();
+		TreeNode<int>* parent = nodeS.top().first;
+		bool right = nodeS.top().second;
+		nodeS.pop();
+		TreeNode<int>* newNode = new TreeNode<int>(keys[splitIdx]);
+		if (parent == nullptr) {
+			// this node is the root
+			bst->root = newNode;
+		}
+		else {
+			// we either place this node on the left subtree of the parent or on the right subtree
+			right ? parent->right = newNode : parent->left = newNode;
+		}
+		// we expanding subtrees via the stack
+		if (low != high) {
+			// right subtree
+			nodeS.push(make_pair(newNode, true));
+			s.push(make_pair(splitIdx + 1, high));
+			// left subtree
+			nodeS.push(make_pair(newNode, false));
+			s.push(make_pair(low, splitIdx - 1));
+		}
+			
 	}
+
+	return bst;
 	
-	return tree;
 }
